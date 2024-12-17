@@ -1,0 +1,9 @@
+tensorflow
+pandas
+flask
+hdfs
+scikit-learn
+pyshark
+pyspark
+kafka-python
+chart-studio

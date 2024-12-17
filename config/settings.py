@@ -1,0 +1,7 @@
+HDFS_URL = 'http://localhost:50070'
+HDFS_DIR = '/network_data/'
+HDFS_USER =  'bssayla_hdp'
+KAFKA_TOPIC = 'network-data/'
+KAFKA_SERVER = 'localhost:9092'
+MODEL_PATH = '/home/bssayla/Downloads/Testing-env/info_gatering/model/bin/model_20.h5'
+NETWORK_INTERFACE = 'wlp1s0'

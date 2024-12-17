@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Predictions</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        canvas {
+            max-width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Real-Time Predictions</h1>
+        <canvas id="predictionChart"></canvas>
+        <h1>Training Data</h1>
+        <canvas id="trainingDataChart"></canvas>
+    </div>
+    <script>
+        const predictionCtx = document.getElementById('predictionChart').getContext('2d');
+        const trainingDataCtx = document.getElementById('trainingDataChart').getContext('2d');
+
+        const predictionLabels = [];
+        const predictionData = {
+            labels: predictionLabels,
+            datasets: [{
+                label: 'Predictions',
+                data: [],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                fill: false,
+                tension: 0.1
+            }]
+        };
+
+        const trainingDataLabels = [];
+        const trainingData = {
+            labels: trainingDataLabels,
+            datasets: [{
+                label: 'Training Data',
+                data: [],
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1,
+                fill: false,
+                tension: 0.1
+            }]
+        };
+
+        const predictionChart = new Chart(predictionCtx, {
+            type: 'line',
+            data: predictionData,
+            options: {
+                scales: {
+                    x: { beginAtZero: true },
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        const trainingDataChart = new Chart(trainingDataCtx, {
+            type: 'line',
+            data: trainingData,
+            options: {
+                scales: {
+                    x: { beginAtZero: true },
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        async function fetchPredictions() {
+            try {
+                const response = await fetch('/predictions');
+                const predictions = await response.json();
+                const time = new Date().toLocaleTimeString();
+                predictionLabels.push(time);
+                predictionData.datasets[0].data.push(predictions);
+                predictionChart.update();
+            } catch (error) {
+                console.error('Error fetching predictions:', error);
+            }
+        }
+
+        async function fetchTrainingData() {
+            try {
+                const response = await fetch('/training-data');
+                const data = await response.json();
+                trainingDataLabels.length = 0;
+                trainingData.datasets[0].data.length = 0;
+                data.forEach(item => {
+                    trainingDataLabels.push(item.timestamp); // Assuming 'timestamp' is a field in the training data
+                    trainingData.datasets[0].data.push(item.value); // Assuming 'value' is a field in the training data
+                });
+                trainingDataChart.update();
+            } catch (error) {
+                console.error('Error fetching training data:', error);
+            }
+        }
+
+        setInterval(fetchPredictions, 1000); // Fetch predictions every second
+        fetchTrainingData(); // Fetch training data once on page load
+    </script>
+</body>
+</html>
