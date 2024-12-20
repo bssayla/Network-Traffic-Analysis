@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Network Attack Detection</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
@@ -12,6 +13,53 @@
         <div class="table-responsive">
             {{ table_html|safe }}
         </div>
+        <h2 class="mt-5">Data Graph</h2>
+        <canvas id="dataChart"></canvas>
     </div>
+    <script>
+        const ctx = document.getElementById('dataChart').getContext('2d');
+        const labels = []; // Flow Duration
+        const dataValues = []; // Total Fwd Packets
+
+        // Fetch data from the server
+        async function fetchData() {
+            try {
+                const response = await fetch('/training-data');
+                const data = await response.json();
+                data.forEach(item => {
+                    labels.push(item['Flow Duration']); // Assuming 'Flow Duration' is a field in the training data
+                    dataValues.push(item['Total Fwd Packets']); // Assuming 'Total Fwd Packets' is a field in the training data
+                });
+                createChart();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        function createChart() {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Fwd Packets over Flow Duration',
+                        data: dataValues,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        fetchData();
+    </script>
 </body>
 </html>

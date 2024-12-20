@@ -1,19 +1,33 @@
 import time
-from data.capture import capture_network_data
+from data.capture import NetworkFlowCapture
 from data.storage import store_data_in_hdfs, fetch_data_from_hdfs
-from data.preprocess import calculate_remaining_features
 from model.predict import predict
 
 def main():
     while True:
         try:
-            output_file = 'network_data.json'
-            capture_network_data(output_file)
-            store_data_in_hdfs(output_file)
-            raw_data = fetch_data_from_hdfs()
-            processed_data = calculate_remaining_features(raw_data)
-            prediction_results = predict(processed_data)
+            print("INFO: Capturing network data...")
+            output_folder = 'network_data'
+            capture = NetworkFlowCapture()
+            try:
+                capture.start_capture()
+            except KeyboardInterrupt:
+                print("\nCapture stopped by user")
+                capture.save_to_json()
+                break
+            except Exception as e:
+                print(f"Error during capture: {e}")
+
+            print("INFO: Storing data in HDFS...")
+            store_data_in_hdfs(output_folder)
+            print("INFO: Fetching data from HDFS...")
+            data = fetch_data_from_hdfs()
+            print(data.head())
+            print("INFO: Predicting results...")
+            prediction_results = predict(data)
+            print("INFO: Results:")
             print(prediction_results[['id', 'Predictions']])
+            print("INFO: done...")
 
             time.sleep(60)
         except Exception as e:
