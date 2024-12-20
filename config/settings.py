@@ -14,13 +14,3 @@ FIELDS = [
    ' Packet Length Std', ' Packet Length Variance', ' Average Packet Size',
    ' Avg Bwd Segment Size', 'Idle Mean', ' Idle Max', ' Idle Min'
    ]
-
-
-
-# Error: features does not exist. Available:  
-# Flow Duration, Bwd Packet Length Max,  Bwd Packet Length Min,
-# Bwd Packet Length Mean,  Bwd Packet Length Std,  Flow IAT Std,
-# Flow IAT Max, Fwd IAT Total,  Fwd IAT Std,  Fwd IAT Max,
-# Min Packet Length,  Max Packet Length,  Packet Length Mean,
-# Packet Length Std,  Packet Length Variance,  Average Packet Size,
-# Avg Bwd Segment Size, Idle Mean,  Idle Max,  Idle Min

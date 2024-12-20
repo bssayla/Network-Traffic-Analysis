@@ -28,7 +28,6 @@ def main():
             print("INFO: Results:")
             print(prediction_results[['id', 'Predictions']])
             print("INFO: done...")
-
             time.sleep(60)
         except Exception as e:
             print(f"Error: {e}")
