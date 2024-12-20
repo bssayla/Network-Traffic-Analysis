@@ -2,5 +2,3 @@ venv/
 testing/
 __pycache__/
 network_data/*
-
-data/training_data/training_data.csv
