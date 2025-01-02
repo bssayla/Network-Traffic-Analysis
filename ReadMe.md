@@ -146,6 +146,6 @@ Access the dashboard at `http://localhost:5000`.
 
 ## Acknowledgements
 
-- Mohamed Ouaicha
-- Moussa Aoukacha
-- Yassine Amarir
+- [Mohamed Ouaicha](https://github.com/bssayla)
+- [Moussa Aoukacha](https://github.com/Aoukacha-Moussa)
+- [Yassine Amarir](https://github.com/YassineAmrir)
