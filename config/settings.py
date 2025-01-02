@@ -3,7 +3,8 @@ HDFS_DIR = '/network_data'
 HDFS_USER =  'root'
 KAFKA_TOPIC = 'network-data'
 KAFKA_SERVER = 'localhost:9092'
-MODEL_PATH = '/home/bssayla/Downloads/Testing-env/info_gatering/model/bin/model_20.h5'
+MODEL_PATH = '/home/bssayla/Downloads/Testing-env/info_gatering/model/bin/model_latest.h5'
+
 NETWORK_INTERFACE = 'wlp1s0'
 
 FIELDS = [

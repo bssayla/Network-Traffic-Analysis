@@ -2,64 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Attack Detection</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Our Dashboard</title>
+    <link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .container {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        .col-md-6 {
+            overflow: hidden;
+        }
+        svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        header, footer {
+            background-color: #f8f8f8;
+            padding: 1rem;
+            text-align: center;
+        }
+        header img {
+            max-height: 50px;
+        }
+        .chart-description {
+            font-size: 1em;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="mt-5">Network Attack Detection</h1>
-        <div class="table-responsive">
-            {{ table_html|safe }}
+    <header>
+        <div class="d-flex align-items-center">
+            <img src="../static/logo.png" alt="Logo" style="max-height: 50px; margin-right: 10px;">
+            <h2 class="mt-2 mb-0">Dashboard</h2>
         </div>
-        <h2 class="mt-5">Data Graph</h2>
-        <canvas id="dataChart"></canvas>
+    </header>
+
+    <div class="container my-4">
+        <h1 class="mb-4">Dashboard Overview</h1>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p class="chart-description">This pie chart shows the distribution of normal and attack traffic.</p>
+                {{ pie_plot_html|safe }}
+            </div>
+            <div class="col-md-6">
+                <p class="chart-description">This line chart shows the prediction trends over time, with red lines indicating attacks and green lines indicating normal traffic.</p>
+                {{ line_chart_html|safe }}
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <p class="chart-description">The box plot illustrates the distribution of packet lengths by traffic type.</p>
+                {{ box_plot_html|safe }}
+            </div>
+            <div class="col-md-6">
+                <p class="chart-description">The violin plot provides a detailed view of the flow IAT standard deviation distribution by traffic type.</p>
+                {{ violin_plot_html|safe }}
+            </div>
+            
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <p class="chart-description">This scatter plot shows the relationship between flow duration and average packet size.</p>
+                {{ scatter_plot_html|safe }}
+            </div>
+            <div class="col-md-6">
+                <p class="chart-description">This scatter plot visualizes the correlation between backward packet length mean and overall packet length mean.</p>
+                {{ scatter_plot_2_html|safe }}
+            </div>
+        </div>
     </div>
-    <script>
-        const ctx = document.getElementById('dataChart').getContext('2d');
-        const labels = []; // Flow Duration
-        const dataValues = []; // Total Fwd Packets
 
-        // Fetch data from the server
-        async function fetchData() {
-            try {
-                const response = await fetch('/training-data');
-                const data = await response.json();
-                data.forEach(item => {
-                    labels.push(item['Flow Duration']); // Assuming 'Flow Duration' is a field in the training data
-                    dataValues.push(item['Total Fwd Packets']); // Assuming 'Total Fwd Packets' is a field in the training data
-                });
-                createChart();
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
+    <footer>
+        <p>&copy; Mohamed Ouaicha, Moussa Aoukacha & Yassine Amarir</p>
+    </footer>
 
-        function createChart() {
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Total Fwd Packets over Flow Duration',
-                        data: dataValues,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        fill: false,
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    scales: {
-                        x: { beginAtZero: true },
-                        y: { beginAtZero: true }
-                    }
-                }
-            });
-        }
-
-        fetchData();
-    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>

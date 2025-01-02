@@ -7,3 +7,4 @@ pyshark
 pyspark
 kafka-python
 chart-studio
+mpld3

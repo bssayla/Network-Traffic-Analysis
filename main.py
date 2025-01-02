@@ -2,6 +2,11 @@ import time
 from data.capture import NetworkFlowCapture
 from data.storage import store_data_in_hdfs, fetch_data_from_hdfs
 from model.predict import predict
+from kafka import KafkaProducer
+from config.settings import KAFKA_SERVER, KAFKA_TOPIC
+
+
+producer = KafkaProducer(bootstrap_servers=KAFKA_SERVER)
 
 def main():
     while True:
@@ -27,8 +32,13 @@ def main():
             prediction_results = predict(data)
             print("INFO: Results:")
             print(prediction_results[['id', 'Predictions']])
+
+            print("INFO: Sending results to Kafka...")
+            predictions_json = prediction_results[['id', 'Predictions']].to_json(orient='records')
+            producer.send(KAFKA_TOPIC, predictions_json.encode('utf-8'))
+            producer.flush()
             print("INFO: done...")
-            time.sleep(60)
+            time.sleep(1)
         except Exception as e:
             print(f"Error: {e}")
 

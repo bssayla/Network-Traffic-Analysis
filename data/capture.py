@@ -3,13 +3,16 @@
 import pyshark
 # import pandas as pd
 from kafka_.producer import send_to_kafka
-from config.settings import NETWORK_INTERFACE
+from config.settings import NETWORK_INTERFACE, KAFKA_SERVER, KAFKA_TOPIC
 import pyshark
 import json
 from time import time
 from datetime import datetime
 import os
 import numpy as np
+from kafka import KafkaProducer
+
+producer = KafkaProducer(bootstrap_servers=KAFKA_SERVER)
 
 class NetworkFlowCapture:
     def __init__(self):
@@ -106,9 +109,6 @@ class NetworkFlowCapture:
         self.save_to_json()
     
     def save_to_json(self, folder_name="network_data"):
-        """
-        Save captured metrics to a JSON file
-        """
         # Create the directory if it does not exist
         if not os.path.exists(folder_name):
             os.makedirs(folder_name)
@@ -138,7 +138,10 @@ class NetworkFlowCapture:
             with open(f"{folder_name}/{filename}", "w") as f:
                 json.dump(flow_stats, f, indent=4)
             print(f"Flow metrics saved to {folder_name}/{filename}")
-            send_to_kafka(f"{folder_name}/{filename}")
+            
+            # Send to Kafka
+            producer.send(KAFKA_TOPIC, json.dumps(flow_stats).encode('utf-8'))
+            producer.flush()
         except Exception as e:
             print(f"Error saving flow metrics: {e}")
 
